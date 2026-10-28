@@ -1,5 +1,6 @@
-import Link from 'next/link';
-import { Clapperboard } from 'lucide-react';
+import Link from "next/link";
+import Image from "next/image"; // تأكد من استيراد مكون الصورة من Next.js
+import { Clapperboard } from "lucide-react";
 
 export function Footer() {
   return (
@@ -20,7 +21,8 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-xs text-muted-foreground max-w-md">
-              منصة استكشاف سينمائية متميزة للأفلام والمسلسلات العالمية المبنية على بيانات The Movie Database.
+              منصة استكشاف سينمائية متميزة للأفلام والمسلسلات العالمية المبنية
+              على بيانات The Movie (TMDB).
             </p>
           </div>
 
@@ -29,7 +31,10 @@ export function Footer() {
             <Link href="/" className="hover:text-primary transition-colors">
               الرئيسية
             </Link>
-            <Link href="/movies" className="hover:text-primary transition-colors">
+            <Link
+              href="/movies"
+              className="hover:text-primary transition-colors"
+            >
               الأفلام
             </Link>
             <Link href="/tv" className="hover:text-primary transition-colors">
@@ -38,11 +43,34 @@ export function Footer() {
           </nav>
         </div>
 
-        {/* TMDB Attribution & Disclaimer */}
-        <div className="mt-8 pt-6 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted-foreground">
-          <p>
-            هذا المنتج يستخدم واجهة برمجة تطبيقات TMDB ولكن غير معتمد أو معترف به من قِبل The Movie Database (TMDB).
-          </p>
+        {/* TMDB Attribution, Developer Info & Disclaimer */}
+        <div className="mt-8 pt-6 border-t border-border/40 flex flex-col lg:flex-row items-center justify-between gap-4 text-[11px] text-muted-foreground">
+          {/* <p className="max-w-xl text-center lg:text-start">
+            هذا المنتج يستخدم واجهة برمجة تطبيقات TMDB ولكن غير معتمد أو معترف
+            به من قِبل The Movie Database (TMDB).
+          </p> */}
+
+          {/* Developer Badge - Clean & Professional for both Light/Dark modes */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/60 dark:bg-muted/40  hover:border-primary/50 transition-all duration-200">
+            <div className="relative h-5 w-5 overflow-hidden rounded-full ring-1 ring-primary/30 shrink-0">
+              <Image
+                src="/hema.jpeg"
+                alt="Ebrahim Yousef"
+                fill
+                sizes="20px" // أضفنا السطر ده هنا عشان نحل التحذير
+                className="object-cover object-top"
+              />
+            </div>
+            <div dir="ltr" className="flex items-center gap-1.5 text-xs">
+              <span className="text-muted-foreground font-medium">
+                Developed by
+              </span>
+              <span className="font-medium bg-linear-to-r from-primary to-primary/85 bg-clip-text text-transparent">
+                Ebrahim Yousef
+              </span>
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
             <span className="font-semibold text-primary">CineScope</span>
             <span>&copy; {new Date().getFullYear()} — جميع الحقوق محفوظة</span>

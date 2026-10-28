@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Film, Menu, X, Clapperboard, Tv } from 'lucide-react';
-import { ThemeToggle } from '@/components/layout/theme-toggle';
-import { SearchDialog } from '@/components/search/search-dialog';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Film, Menu, X, Clapperboard, Tv } from "lucide-react";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { SearchDialog } from "@/components/search/search-dialog";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: '/', label: 'الرئيسية' },
-  { href: '/movies', label: 'الأفلام' },
-  { href: '/tv', label: 'المسلسلات' },
+  { href: "/", label: "الرئيسية" },
+  { href: "/movies", label: "الأفلام" },
+  { href: "/tv", label: "المسلسلات" },
 ];
 
 export function Navbar() {
@@ -42,18 +42,18 @@ export function Navbar() {
             <nav className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => {
                 const isActive =
-                  link.href === '/'
-                    ? pathname === '/'
+                  link.href === "/"
+                    ? pathname === "/"
                     : pathname.startsWith(link.href);
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      'px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors',
+                      "px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors",
                       isActive
-                        ? 'bg-secondary text-primary font-semibold'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                        ? "bg-secondary text-primary font-semibold"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                     )}
                   >
                     {link.label}
@@ -74,7 +74,7 @@ export function Navbar() {
               size="icon"
               className="md:hidden h-9 w-9 rounded-lg text-foreground hover:bg-secondary"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              aria-label={mobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+              aria-label={mobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
               aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
@@ -93,8 +93,8 @@ export function Navbar() {
           <nav className="flex flex-col gap-1.5">
             {navLinks.map((link) => {
               const isActive =
-                link.href === '/'
-                  ? pathname === '/'
+                link.href === "/"
+                  ? pathname === "/"
                   : pathname.startsWith(link.href);
               return (
                 <Link
@@ -102,15 +102,15 @@ export function Navbar() {
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    "flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors",
                     isActive
-                      ? 'bg-secondary text-primary font-semibold'
-                      : 'text-foreground hover:bg-muted'
+                      ? "bg-secondary text-primary font-semibold"
+                      : "text-foreground hover:bg-muted",
                   )}
                 >
-                  {link.href === '/' && <Clapperboard className="h-4 w-4" />}
-                  {link.href === '/movies' && <Film className="h-4 w-4" />}
-                  {link.href === '/tv' && <Tv className="h-4 w-4" />}
+                  {link.href === "/" && <Clapperboard className="h-4 w-4" />}
+                  {link.href === "/movies" && <Film className="h-4 w-4" />}
+                  {link.href === "/tv" && <Tv className="h-4 w-4" />}
                   <span>{link.label}</span>
                 </Link>
               );
