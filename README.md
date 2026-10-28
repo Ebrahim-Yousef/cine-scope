@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CineScope — منصة استكشاف السينما والتلفزيون العالمي
 
-## Getting Started
+CineScope هو موقع ويب حديث وفاخر لاستكشاف ومتابعة أحدث الأفلام والمسلسلات التلفزيونية العالمية، بالاعتماد الكامل على واجهة برمجة تطبيقات **The Movie Database (TMDB)**.
 
-First, run the development server:
+يتميز التطبيق بتجربة مستخدم عربية أصيلة مع دعم كامل للاتجاه من اليمين إلى اليسار (`RTL`)، وهوية بصرية سينمائية متناسقة مستوحاة من نمط **Velvet Rose**، مع دعم الوضعين الفاتح والداكن، وبحث لحظي ذكي، وتفاصيل شاملة للأعمال الفنية.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🎨 الهوية البصرية — Velvet Rose
+
+تم تصميم CineScope بنظام ألوان **Velvet Rose** الذي يجمع بين الفخامة والراحة البصرية:
+- **الوضع الفاتح (Light Mode):**
+  - خلفية ناعمة بدرجة مخملية: `#FFF3F7`
+  - بطاقات وأسطح بيضاء نقية مع حدود بدرجات وردية رمادية خافتة.
+  - لون تفاعلي أساسي (Accent): `#B64278`
+  - نصوص بلون كرزي داكن مريح ومقروء.
+- **الوضع الداكن (Dark Mode):**
+  - خلفية سينمائية عميقة: `#211820`
+  - أسطح بطاقات داكنة: `#30232D`
+  - لون تفاعلي مميز: `#F2A6C8`
+  - نصوص واضحة وعالية التباين: `#FFF3F7`
+- دعم الخط العربي الرسمي **IBM Plex Sans Arabic** عبر `next/font/google`.
+
+---
+
+## 🚀 التقنيات المستخدمة
+
+- **Next.js 16 (App Router)** مع أحدث معايير RSC وخادم Node 24.
+- **React 19** ومكونات الخادم والعميل المتوافقة.
+- **TypeScript** مع فحص نوعي صارم (Strict Mode).
+- **Tailwind CSS v4** ونظام المتغيرات التصميمية الحديث.
+- **shadcn/ui** (Button, Input, Badge, Skeleton, Dialog, DropdownMenu).
+- **Lucide React** للأيقونات التفاعلية.
+- **next-themes** لإدارة المظهر الفاتح والداكن بدون وميض (Zero-FOUC).
+- **Native Fetch** مع استراتيجيات كاش مخصصة وإعادة تحقق دورية (Revalidation).
+
+---
+
+## 🧭 مسارات التطبيق (Application Routes)
+
+| المسار | الوصف |
+|---|---|
+| `/` | الصفحة الرئيسية: البانر السينمائي الترويجي (Hero)، الأفلام الأكثر رواجاً، مسلسلات التلفزيون الشائعة، والأعلى تقييماً. |
+| `/movies` | صفحة الأفلام: شبكة عرض استجابية، تصفية بين الرائج والأعلى تقييماً، مع نظام ترقيم صفحات (Pagination). |
+| `/tv` | صفحة المسلسلات: شبكة متناسقة للمسلسلات الشائعة مع ترقيم الصفحات والتقييمات وسنة العرض. |
+| `/movie/[id]` | تفاصيل الفيلم: صورة الخلفية العريضة، ملصق العمل، القصة، المدة، تاريخ العرض، التصنيفات، الميزانية والإيرادات. |
+| `/tv/[id]` | تفاصيل المسلسل: البانر، القصة، عدد المواسم والحلقات، شبكات وتواريخ العرض، والتصنيفات. |
+| `/api/search` | نقطة نهاية للبحث التفاعلي المتعدد (Multi-search)، مع معالجة وتصفية النتائج وضمان الأمان. |
+
+---
+
+## 🔑 كيفية الحصول على مفتاح TMDB API وإعداده
+
+يحتاج التطبيق إلى **API Read Access Token** (رمز وصول القراءة بصيغة Bearer Token v4) من TMDB:
+
+1. أنشئ حساباً مجانياً على موقع TMDB: [https://www.themoviedb.org](https://www.themoviedb.org).
+2. توجه إلى **إعدادات الحساب** -> **API**: [https://www.themoviedb.org/settings/api](https://www.themoviedb.org/settings/api).
+3. اختر إنشاء مفتاح مطور (Developer Key) واملأ البيانات البسيطة لطلب المفتاح.
+4. انسخ **API Read Access Token (v4 auth)** (الرمز الطويل الذي يبدأ بـ `eyJ...`).
+
+### إعداد المتغيرات محلياً
+
+قم بإنشاء ملف `.env.local` في جذر المشروع (أو عدّل الملف المنشأ تلقائياً):
+
+```env
+# الصق رمز الوصول الخاص بك هنا (Bearer Token)
+TMDB_ACCESS_TOKEN=eyJhbGciOi...
+
+# عنوان الخادم الافتراضي لـ TMDB
+TMDB_BASE_URL=https://api.themoviedb.org/3
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> ⚠️ **أمان الرمز البرمجي:**
+> يتم استخدام `TMDB_ACCESS_TOKEN` حصرياً على خوادم Server Components ونقاط النهاية في خادم Next.js، ولا يتم تصديره أو كشفه نهائياً للمتصفح (عدم استخدام البادئة `NEXT_PUBLIC_`).
+> ملف `.env.local` مدرج في `.gitignore` ولا يتم رفعه أبداً للمستودعات.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 💻 التثبيت والتشغيل المحلي
 
-## Learn More
+### 1. تثبيت الحزم:
+```bash
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 2. تشغيل بيئة التطوير:
+```bash
+npm run dev
+```
+افتح المتصفح على [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. التحقق من الكود (Linting):
+```bash
+npm run lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. الفحص النوعي (Type Check):
+```bash
+npx tsc --noEmit
+```
 
-## Deploy on Vercel
+### 5. البناء للإنتاج (Production Build):
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ⚠️ القيود المعروفة وإخلاء المسؤولية (Attribution & Disclaimer)
+
+1. **إخلاء المسؤولية القانوني لـ TMDB:**
+   > هذا المنتج يستخدم واجهة برمجة تطبيقات TMDB ولكن غير معتمد أو مرخص رسميًا من قِبل The Movie Database (TMDB).
+2. **حدود واجهة TMDB المجانية:**
+   - خدمة TMDB تحدد حد الصفحات عند 500 صفحة كحد أقصى لعمليات الترقيم.
+   - يعتمد عرض بعض البيانات الإضافية (مثل شباك التذاكر أو الموقع الرسمي) على توفرها في سجلات TMDB لكل عمل.

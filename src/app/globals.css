@@ -1,26 +1,123 @@
 @import "tailwindcss";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-ibm-plex-arabic), system-ui, sans-serif;
+  --font-heading: var(--font-ibm-plex-arabic), system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #FFF3F7;
+  --foreground: #2E1222;
+  --card: #FFFFFF;
+  --card-foreground: #2E1222;
+  --popover: #FFFFFF;
+  --popover-foreground: #2E1222;
+  --primary: #B64278;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F6DDE8;
+  --secondary-foreground: #2E1222;
+  --muted: #F8E5EE;
+  --muted-foreground: #7D596D;
+  --accent: #F6DDE8;
+  --accent-foreground: #2E1222;
+  --destructive: #BE123C;
+  --destructive-foreground: #FFFFFF;
+  --border: #E8CAD6;
+  --input: #E8CAD6;
+  --ring: #B64278;
+  --radius: 0.75rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #2E1222;
+  --sidebar-primary: #B64278;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F6DDE8;
+  --sidebar-accent-foreground: #2E1222;
+  --sidebar-border: #E8CAD6;
+  --sidebar-ring: #B64278;
+}
+
+.dark {
+  --background: #211820;
+  --foreground: #FFF3F7;
+  --card: #30232D;
+  --card-foreground: #FFF3F7;
+  --popover: #30232D;
+  --popover-foreground: #FFF3F7;
+  --primary: #F2A6C8;
+  --primary-foreground: #211820;
+  --secondary: #493442;
+  --secondary-foreground: #FFF3F7;
+  --muted: #3D2C38;
+  --muted-foreground: #CBB0C0;
+  --accent: #493442;
+  --accent-foreground: #FFF3F7;
+  --destructive: #F87171;
+  --destructive-foreground: #211820;
+  --border: #4D3A49;
+  --input: #4D3A49;
+  --ring: #F2A6C8;
+  --sidebar: #30232D;
+  --sidebar-foreground: #FFF3F7;
+  --sidebar-primary: #F2A6C8;
+  --sidebar-primary-foreground: #211820;
+  --sidebar-accent: #493442;
+  --sidebar-accent-foreground: #FFF3F7;
+  --sidebar-border: #4D3A49;
+  --sidebar-ring: #F2A6C8;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
