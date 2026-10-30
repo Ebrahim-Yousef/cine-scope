@@ -9,7 +9,7 @@ import {
 } from '@/lib/tmdb';
 import { MediaGrid } from '@/components/media/media-grid';
 import { Pagination } from '@/components/media/pagination';
-import { TokenWarning } from '@/components/layout/token-warning';
+import { ErrorState } from '@/components/ui/error-state';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { MediaCardProps } from '@/components/media/media-card';
@@ -38,7 +38,7 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
 
   let movies: Omit<MediaCardProps, 'priority'>[] = [];
   let totalPages = 1;
-  let fetchError: string | null = null;
+  let fetchError = false;
 
   if (isConfigured) {
     try {
@@ -57,9 +57,13 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
         type: 'movie' as const,
       }));
     } catch (err: unknown) {
-      fetchError =
-        err instanceof Error ? err.message : 'تعذر استرجاع قائمة الأفلام حالياً';
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('[CineScope Movies]:', err instanceof Error ? err.message : err);
+      }
+      fetchError = true;
     }
+  } else {
+    fetchError = true;
   }
 
   return (
@@ -112,27 +116,26 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
         </div>
       </div>
 
-      {!isConfigured && <TokenWarning />}
-
+      {/* Polished error state */}
       {fetchError && (
-        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-5 text-destructive text-sm">
-          {fetchError}
-        </div>
+        <ErrorState
+          title="تعذّر تحميل المحتوى"
+          description="حصلت مشكلة أثناء تحميل البيانات. حاول تاني بعد قليل."
+          actionLabel="إعادة المحاولة"
+        />
       )}
 
       {/* Grid */}
-      <MediaGrid
-        items={movies}
-        priorityCount={10}
-        emptyMessage={
-          !isConfigured
-            ? 'يرجى تهيئة مفتاح TMDB_ACCESS_TOKEN في .env.local لعرض الأفلام.'
-            : 'لم يتم العثور على أي أفلام في هذه الصفحة.'
-        }
-      />
+      {!fetchError && (
+        <MediaGrid
+          items={movies}
+          priorityCount={10}
+          emptyMessage="لم يتم العثور على أي أفلام في هذه الصفحة."
+        />
+      )}
 
       {/* Pagination */}
-      {isConfigured && totalPages > 1 && (
+      {!fetchError && isConfigured && totalPages > 1 && (
         <Pagination
           currentPage={page}
           totalPages={totalPages}

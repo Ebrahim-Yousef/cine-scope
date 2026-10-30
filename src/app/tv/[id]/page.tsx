@@ -19,8 +19,8 @@ import {
 } from '@/lib/tmdb';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
+import { ErrorState } from '@/components/ui/error-state';
 import { cn } from '@/lib/utils';
-import { TokenWarning } from '@/components/layout/token-warning';
 
 interface TVDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -62,13 +62,33 @@ export default async function TVDetailsPage({ params }: TVDetailsPageProps) {
   const isConfigured = isTMDBConfigured();
   if (!isConfigured) {
     return (
-      <div className="container mx-auto max-w-7xl px-4 py-12">
-        <TokenWarning />
+      <div className="container mx-auto max-w-7xl px-4 py-20 flex items-center justify-center">
+        <ErrorState
+          title="تعذّر تحميل المحتوى"
+          description="حصلت مشكلة أثناء تحميل البيانات. حاول تاني بعد قليل."
+          actionLabel="إعادة المحاولة"
+        />
       </div>
     );
   }
 
-  const tv = await getTVDetails(id);
+  let tv;
+  try {
+    tv = await getTVDetails(id);
+  } catch (err: unknown) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[CineScope TV Details]:', err instanceof Error ? err.message : err);
+    }
+    return (
+      <div className="container mx-auto max-w-7xl px-4 py-20 flex items-center justify-center">
+        <ErrorState
+          title="تعذّر تحميل المحتوى"
+          description="حصلت مشكلة أثناء تحميل البيانات. حاول تاني بعد قليل."
+          actionLabel="إعادة المحاولة"
+        />
+      </div>
+    );
+  }
 
   if (!tv) {
     notFound();

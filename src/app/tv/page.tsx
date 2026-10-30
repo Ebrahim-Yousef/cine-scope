@@ -7,7 +7,7 @@ import {
 } from '@/lib/tmdb';
 import { MediaGrid } from '@/components/media/media-grid';
 import { Pagination } from '@/components/media/pagination';
-import { TokenWarning } from '@/components/layout/token-warning';
+import { ErrorState } from '@/components/ui/error-state';
 import type { MediaCardProps } from '@/components/media/media-card';
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export default async function TVPage({ searchParams }: TVPageProps) {
 
   let tvShows: Omit<MediaCardProps, 'priority'>[] = [];
   let totalPages = 1;
-  let fetchError: string | null = null;
+  let fetchError = false;
 
   if (isConfigured) {
     try {
@@ -47,9 +47,13 @@ export default async function TVPage({ searchParams }: TVPageProps) {
         type: 'tv' as const,
       }));
     } catch (err: unknown) {
-      fetchError =
-        err instanceof Error ? err.message : 'تعذر استرجاع قائمة المسلسلات حالياً';
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('[CineScope TV]:', err instanceof Error ? err.message : err);
+      }
+      fetchError = true;
     }
+  } else {
+    fetchError = true;
   }
 
   return (
@@ -68,27 +72,26 @@ export default async function TVPage({ searchParams }: TVPageProps) {
         </p>
       </div>
 
-      {!isConfigured && <TokenWarning />}
-
+      {/* Polished error state */}
       {fetchError && (
-        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-5 text-destructive text-sm">
-          {fetchError}
-        </div>
+        <ErrorState
+          title="تعذّر تحميل المحتوى"
+          description="حصلت مشكلة أثناء تحميل البيانات. حاول تاني بعد قليل."
+          actionLabel="إعادة المحاولة"
+        />
       )}
 
       {/* Grid */}
-      <MediaGrid
-        items={tvShows}
-        priorityCount={10}
-        emptyMessage={
-          !isConfigured
-            ? 'يرجى تهيئة مفتاح TMDB_ACCESS_TOKEN في .env.local لعرض المسلسلات.'
-            : 'لم يتم العثور على أي مسلسلات في هذه الصفحة.'
-        }
-      />
+      {!fetchError && (
+        <MediaGrid
+          items={tvShows}
+          priorityCount={10}
+          emptyMessage="لم يتم العثور على أي مسلسلات في هذه الصفحة."
+        />
+      )}
 
       {/* Pagination */}
-      {isConfigured && totalPages > 1 && (
+      {!fetchError && isConfigured && totalPages > 1 && (
         <Pagination
           currentPage={page}
           totalPages={totalPages}
